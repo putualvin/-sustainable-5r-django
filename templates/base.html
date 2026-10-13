@@ -1,0 +1,22 @@
+{% load static %}<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#d90924">
+<title>{% block title %}Sustainable 5R{% endblock %}</title>
+<link rel="icon" href="{% static 'icon.svg' %}" type="image/svg+xml"><link rel="manifest" href="{% static 'manifest.json' %}"><link rel="stylesheet" href="{% static 'app.css' %}"><script src="{% static 'app.js' %}" defer></script>
+{% block head %}{% endblock %}</head>
+<body data-user="{{ request.user.pk|default:'' }}">
+<a class="skip" href="#main">Lewati navigasi</a>
+<aside class="sidebar" id="navigation"><a class="brand" href="/">5<span>R</span><small>SUSTAINABLE</small></a><span class="nav-label">RUANG KERJA</span>
+<nav aria-label="Navigasi utama">
+<a href="/" class="{% if request.path == '/' %}active{% endif %}"><span class="nav-icon">⌂</span> Beranda</a>
+{% if nav_audit %}<a href="{% url 'audits' %}" class="{% if '/audit/' in request.path %}active{% endif %}"><span class="nav-icon">▤</span> Audit</a>{% endif %}
+{% if nav_capa %}<a href="{% url 'followups' %}" class="{% if '/tindak-lanjut/' in request.path or '/temuan/' in request.path %}active{% endif %}"><span class="nav-icon">☑</span> Tindak Lanjut</a>{% endif %}
+{% if nav_redtag %}<a href="{% url 'redtags' %}" class="{% if '/redtag/' in request.path %}active{% endif %}"><span class="nav-icon">◇</span> Red Tag</a>{% endif %}
+{% if nav_audit %}<a href="{% url 'schedule' %}" class="{% if '/jadwal/' in request.path %}active{% endif %}"><span class="nav-icon">▦</span> Jadwal</a>{% endif %}
+{% if nav_reports %}<a href="{% url 'reports' %}" class="{% if '/laporan/' in request.path %}active{% endif %}"><span class="nav-icon">▥</span> Laporan</a>{% endif %}
+</nav><div class="sidebar-foot"><span class="avatar">{{ request.user.first_name|first|default:'5' }}</span><div><strong>{{ request.user.first_name|default:request.user.username }}</strong><small>{{ role_labels|join:' · ' }}</small></div></div></aside>
+<div class="app"><header class="topbar"><button class="icon-button mobile-only" id="menu-toggle" aria-label="Buka navigasi" aria-expanded="false">☰</button><span class="crumb">Operasional <span>/</span> Sustainable 5R</span><div class="top-actions"><span id="connection" class="connection"><i></i> Online</span>{% if demo_mode %}<span class="demo-label">DATA DEMO</span>{% endif %}<form action="{% url 'logout' %}" method="post" class="logout-form">{% csrf_token %}<button class="text-button" type="submit">Keluar</button></form></div></header>
+<div id="offline-banner" class="offline-banner" hidden>Koneksi terputus. <a href="/offline/">Buka audit offline yang sudah diunduh →</a></div>
+<main id="main">{% for message in messages %}<div class="notice {{ message.tags }}" role="status">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer class="app-footer">Sustainable 5R <span>Setiap temuan, satu langkah perbaikan.</span></footer></div>
+<dialog id="photo-dialog"><button type="button" class="icon-button" id="close-photo" aria-label="Tutup foto">×</button><img alt="Foto bukti diperbesar" id="photo-large"></dialog>
+{% block scripts %}{% endblock %}</body></html>
